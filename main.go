@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/goccy/go-yaml"
-	"github.com/kanengo/cidg/example/service1"
 )
 
 //go list -deps -f '{{.ImportPath}} ===  {{.GoFiles}}' |grep "$(go list -m)"
@@ -18,7 +17,6 @@ var configPath = flag.String("config_path", ".cidg.yml", "config path")
 
 func main() {
 	flag.Parse()
-	service1.Service1()
 
 	var cfg Config
 
