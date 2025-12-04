@@ -42,8 +42,9 @@ func run(moduleList []string) error {
 	}
 
 	for _, mod := range moduleList {
+		mod = filepath.Clean(mod)
 		for _, diff := range diffs {
-			if strings.HasPrefix(mod, diff.Path) {
+			if strings.HasPrefix(diff.Path, mod) {
 				affectModules[mod] = struct{}{}
 				break
 			}
