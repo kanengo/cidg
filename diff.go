@@ -3,6 +3,7 @@ package main
 import (
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"strings"
 )
 
@@ -14,7 +15,7 @@ type diffFile struct {
 	FileName string
 }
 
-func getHeadDiffFiles() ([]diffFile, error) {
+func getHeadDiffFiles(cfg *Config) ([]diffFile, error) {
 	cmd := exec.Command("git", "diff", "--name-only", "HEAD~1")
 	output, err := cmd.Output()
 	if err != nil {
@@ -26,6 +27,9 @@ func getHeadDiffFiles() ([]diffFile, error) {
 	ret := make([]diffFile, 0, len(fileList))
 	for _, file := range fileList {
 		if file == "" {
+			continue
+		}
+		if slices.Contains(cfg.IgnoreFiles, file) {
 			continue
 		}
 		pkg, _ := packageForFile(file)
