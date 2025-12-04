@@ -17,6 +17,6 @@ func packageForFile(file string) (string, error) {
 	if len(pkgs) == 0 {
 		return "", fmt.Errorf("no package found for %s", file)
 	}
-	fmt.Println(pkgs)
+	// fmt.Println("file pkg", file, pkgs)
 	return pkgs[0].PkgPath, nil
 }

@@ -18,19 +18,6 @@ var modulePath = flag.String("module_path", "./", "module path")
 func main() {
 	flag.Parse()
 	service1.Service1()
-	executable, err := os.Executable()
-	if err != nil {
-		panic(err)
-	}
-	execDir := filepath.Dir(executable)
-	deps, err := listModuleDeps(execDir, *modulePath)
-	if err != nil {
-		fmt.Println("listModuleDeps err:", err)
-		return
-	}
-	for _, dep := range deps {
-		fmt.Println(dep.Package, dep.Files)
-	}
 
 	moduleList := strings.Fields(*modulePath)
 
@@ -42,6 +29,7 @@ func main() {
 }
 
 func run(moduleList []string) error {
+	// fmt.Println("moduleList:", moduleList)
 	executable, err := os.Executable()
 	if err != nil {
 		panic(err)
@@ -63,7 +51,7 @@ func run(moduleList []string) error {
 		if _, ok := affectModules[mod]; ok {
 			continue
 		}
-		deps, err := listModuleDeps(execDir, *modulePath)
+		deps, err := listModuleDeps(execDir, mod)
 		if err != nil {
 			fmt.Println("listModuleDeps err:", err)
 			return err
