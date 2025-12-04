@@ -8,27 +8,34 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/goccy/go-yaml"
 	"github.com/kanengo/cidg/example/service1"
 )
 
 //go list -deps -f '{{.ImportPath}} ===  {{.GoFiles}}' |grep "$(go list -m)"
 
-var modulePath = flag.String("module_path", "./", "module path")
+var configPath = flag.String("config_path", ".cidg.yml", "config path")
 
 func main() {
 	flag.Parse()
 	service1.Service1()
 
-	moduleList := strings.Fields(*modulePath)
+	var cfg Config
 
-	if err := run(moduleList); err != nil {
+	content, err := os.ReadFile(*configPath)
+	if err != nil {
+		panic(err)
+	}
+	yaml.Unmarshal(content, &cfg)
+
+	if err := run(&cfg); err != nil {
 		fmt.Println(fmt.Errorf("cidg failed: %w", err))
 		os.Exit(1)
 		return
 	}
 }
 
-func run(moduleList []string) error {
+func run(cfg *Config) error {
 	// fmt.Println("moduleList:", moduleList)
 	executable, err := os.Executable()
 	if err != nil {
@@ -36,15 +43,18 @@ func run(moduleList []string) error {
 	}
 	execDir := filepath.Dir(executable)
 	affectModules := make(map[string]struct{})
-	diffs, err := getHeadDiffFiles()
+	diffs, err := getHeadDiffFiles(cfg)
 	if err != nil {
 		return err
 	}
 
-	for _, mod := range moduleList {
+	for _, mod := range cfg.ModuleList {
 		mod = filepath.Clean(mod)
 		for _, diff := range diffs {
 			if strings.HasPrefix(diff.Path, mod) {
+				affectModules[mod] = struct{}{}
+				break
+			} else if slices.Contains(cfg.GlobalFiles, diff.Path) {
 				affectModules[mod] = struct{}{}
 				break
 			}
