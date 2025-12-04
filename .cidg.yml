@@ -1,0 +1,6 @@
+module_list:
+ - example/service1
+ - example/service2
+ignore_files:
+ - .gitignore
+ - .cidg.yml
