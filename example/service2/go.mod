@@ -7,4 +7,7 @@ replace (
 	github.com/kanengo/cidg/example/service1 => ../service1
 )
 
-require github.com/kanengo/cidg v0.0.0
+require (
+	github.com/kanengo/cidg v0.0.0
+	github.com/kanengo/cidg/example/service1 v0.0.0
+)
