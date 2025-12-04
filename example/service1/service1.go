@@ -9,3 +9,7 @@ func Service1() {
 func Service1Mul(a, b int) int {
 	return util.Mul(a, b)
 }
+
+func Service1Sub(a, b int) int {
+	return util.Sub(a, b)
+}
