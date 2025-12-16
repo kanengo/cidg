@@ -36,7 +36,7 @@ func main() {
 
 func run(cfg *Config) error {
 	// fmt.Println("moduleList:", moduleList)
-	executable, err := os.Executable()
+	executable, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}
