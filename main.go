@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -74,9 +75,15 @@ func run(cfg *Config) error {
 		}
 	}
 
-	for mod := range affectModules {
-		fmt.Println("affect module:", mod)
+	resultList := make([]string, 0, len(affectModules))
+
+	for _, mod := range cfg.ModuleList {
+		if _, ok := affectModules[mod]; ok {
+			resultList = append(resultList, mod)
+		}
 	}
 
+	jsonStr, _ := json.Marshal(resultList)
+	fmt.Println(string(jsonStr))
 	return nil
 }
