@@ -10,6 +10,7 @@ func Service2(a, b int) int {
 	return util.Add(a, b)
 }
 
+// Service2Mul
 func Service2Mul(a, b int) int {
 	return util.Mul(a, b)
 }
