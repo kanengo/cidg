@@ -36,11 +36,11 @@ func main() {
 
 func run(cfg *Config) error {
 	// fmt.Println("moduleList:", moduleList)
-	executable, err := os.Getwd()
+	execDir, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}
-	execDir := filepath.Dir(executable)
+	// execDir := filepath.Dir(executable)
 	affectModules := make(map[string]struct{})
 	diffs, err := getHeadDiffFiles(cfg)
 	if err != nil {
