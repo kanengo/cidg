@@ -40,11 +40,16 @@ func runCommands(cmds ...*exec.Cmd) ([]byte, error) {
 func listModuleDeps(execDir, modulePath string) (map[string]Dep, error) {
 	modulePath = strings.TrimSpace(modulePath)
 	modulePath = filepath.Join(execDir, modulePath)
-	modOut, err := exec.Command("go", "list", "-m").Output()
+	modOut, err := exec.Command("go", "-C", modulePath, "list", "-m").Output()
 	if err != nil {
 		return nil, err
 	}
 	modName := strings.TrimSpace(string(modOut))
+	parts := strings.Split(modName, "/")
+	if len(parts) > 3 {
+		modName = strings.Join(parts[:3], "/")
+	}
+
 	output, err := runCommands(
 		exec.Command("go", "-C", modulePath, "list", "-deps", "-f", "{{.ImportPath}}:::{{.GoFiles}}"),
 		exec.Command("grep", modName),
